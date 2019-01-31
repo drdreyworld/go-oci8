@@ -100,6 +100,7 @@ func (stmt *OCI8Stmt) bind(ctx context.Context, args []namedValue) ([]oci8Bind, 
 				sbind.pbuf = unsafe.Pointer(cByteN(argValue, 32768))
 				sbind.maxSize = 32767
 				if sbind.out.In && !isNill {
+					// @TODO check on blobs larger than 65535
 					*sbind.length = C.ub2(len(argValue))
 				} else {
 					*sbind.indicator = -1 // set to null
@@ -109,7 +110,8 @@ func (stmt *OCI8Stmt) bind(ctx context.Context, args []namedValue) ([]oci8Bind, 
 				sbind.dataType = C.SQLT_BIN
 				sbind.pbuf = unsafe.Pointer(cByte(argValue))
 				sbind.maxSize = C.sb4(len(argValue))
-				*sbind.length = C.ub2(len(argValue))
+				// *sbind.length = C.ub2(len(argValue))
+				sbind.length = nil
 			}
 
 		case time.Time:
