@@ -111,6 +111,7 @@ func (stmt *OCI8Stmt) bind(ctx context.Context, args []namedValue) ([]oci8Bind, 
 				sbind.pbuf = unsafe.Pointer(cByte(argValue))
 				sbind.maxSize = C.sb4(len(argValue))
 				// *sbind.length = C.ub2(len(argValue))
+				C.free(unsafe.Pointer(sbind.length))
 				sbind.length = nil
 			}
 
